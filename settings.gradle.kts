@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "My Application"
 include(":app")
 
-//includeBuild("ib/includeBuild")
+includeBuild("includeBuild/gradleConfiguration")
