@@ -1,11 +1,24 @@
 plugins {
-    id("ui-plugin")
+    id("android-lib-plugin")
+    id("hilt-plugin")
 }
+
+hiltConfiguration {
+    /*
+        Uncomment below when need navigation support
+     */
+    // navigation { applied.set(true) }
+}
+
+// Uncomment below to apply compose
+/*uiConfiguration {
+    applyCompose()
+}*/
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.2")
+    implementation(libs.androidxLibs.core.ktx)
+    implementation(libs.androidxLibs.appcompat)
     implementation("com.google.android.material:material:1.6.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

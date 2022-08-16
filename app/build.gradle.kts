@@ -1,54 +1,34 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    kotlin("kapt")
+    id("app-plugin")
+    id("hilt-plugin")
 }
 
-project.extensions.configure(com.android.build.gradle.BaseExtension::class.java) {
-    compileSdkVersion(32)
-    defaultConfig {
-        applicationId = "com.study.compose.shrine"
-        minSdk = 21
-        targetSdk = 32
-        versionCode = 1
-        versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
-    }
+hiltConfiguration {
+    /*
+        Uncomment below when need navigation support
+     */
+    // navigation { applied.set(true) }
+}
 
-    buildTypes {
-        getByName("release") {
-            minifyEnabled(false)
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
+kapt {
+    correctErrorTypes = true
+}
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
+uiConfiguration {
+    /*
+        Uncomment below when need Jetpack compose support
+     */
+//    applyCompose()
+}
 
-    buildFeatures.viewBinding = true
-    packagingOptions {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-
-    // Allow references to generated code
-    kapt {
-        correctErrorTypes = true
-    }
+hilt {
+    enableAggregatingTask = true
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.2")
+    implementation(libs.androidxLibs.core.ktx)
+    implementation(libs.androidxLibs.appcompat)
+    implementation("androidx.multidex:multidex:2.0.1")
     implementation("com.google.android.material:material:1.5.0-alpha04")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.0")

@@ -8,7 +8,6 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -23,8 +22,10 @@ dependencyResolutionManagement {
     }
 
     versionCatalogs {
+
+        val catalogPath = "../../gradle/"
         create("libs") {
-            from(files("../../gradle/libs.versions.toml"))
+            from(files("$catalogPath/libs.versions.toml"))
         }
     }
 }
