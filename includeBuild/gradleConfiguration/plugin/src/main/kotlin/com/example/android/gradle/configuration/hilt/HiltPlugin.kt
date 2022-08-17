@@ -9,14 +9,36 @@ import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.getByType
 
 const val Default_Hilt_Version = "2.43.2"
+const val Default_Hilt_Classpath_Artifact = "hilt-android-gradle-plugin"
 const val Default_Hilt_Navigation_Compose_Version = "1.0.0"
 
 class HiltPlugin : Plugin<Project> {
     override fun apply(target: Project) {
-        val hiltExtension =
-            target.extensions.create("hiltConfiguration", HiltPluginExtension::class.java)
         val hiltLibs = target.extensions.getByType<VersionCatalogsExtension>().find("libs")
 
+        // Check classPath configuration
+        val hiltClassPathConfigName = if (hiltLibs.isPresent && hiltLibs.get().findPlugin("hilt-android-gradle").isPresent) {
+            // Get classPath Artifact
+            val classPathArtifact = hiltLibs.get().findPlugin("hilt-android-gradle").get().get().pluginId.split(":")[1]
+            target.debug("found hilt classPath configuration with artifact $classPathArtifact")
+            classPathArtifact
+        } else Default_Hilt_Classpath_Artifact
+
+        val classPath = target.rootProject.buildscript.configurations.named("classpath")
+        val hasClassPathConfig = classPath.get().dependencies.find {
+            it.name == hiltClassPathConfigName
+        } != null
+
+        if (!hasClassPathConfig) {
+            target.warning("""
+                Missing hilt classpath config at rootProject buildScript.
+                Please follow https://dagger.dev/hilt/gradle-setup to add classPath
+            """.trimIndent())
+            return
+        }
+        // Hilt config
+        val hiltExtension =
+            target.extensions.create("hiltConfiguration", HiltPluginExtension::class.java)
         target.pluginManager.apply("kotlin-kapt")
 
         hiltLibs.ifPresentOrElse(
